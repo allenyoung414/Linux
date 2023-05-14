@@ -15,7 +15,7 @@
 #define MAX_EVENT_NUMBER 1024
 #define BUFFER_SIZE 10
 
-int setnonblocking(int fd)
+int setnonblocking(int fd)//将文件描述符设置成非阻塞的
 {
     int old_option = fcntl(fd, F_GETFL);
     int new_option = old_option | O_NONBLOCK;
@@ -23,8 +23,8 @@ int setnonblocking(int fd)
     return old_option;
 }
 
-void addfd(int epollfd, int fd, bool enable_et)
-{
+void addfd(int epollfd, int fd, bool enable_et)//将文件描述符fd上的EPOLLIN注册到epollfd指示的epoll内核事件表中
+{//参数enbale指示是否对fd启用ET模式
     epoll_event event;
     event.data.fd = fd;
     event.events = EPOLLIN;
@@ -37,7 +37,7 @@ void addfd(int epollfd, int fd, bool enable_et)
 }
 
 void lt(epoll_event* events, int number, int epollfd, int listenfd)
-{
+{//LT模式的工作流程
     char buf[BUFFER_SIZE];
     for(int i =0; i < number; i++)
     {
@@ -50,7 +50,7 @@ void lt(epoll_event* events, int number, int epollfd, int listenfd)
             addfd(epollfd, connfd, false);
         }
         else if(events[i].events & EPOLLET)
-        {
+        {//SOCKET读缓存中有未读出的数据时，这段代码被触发
             printf( "event trigger once\n" );
             memset(buf, '\0', BUFFER_SIZE);
             int ret = recv(sockfd, buf, BUFFER_SIZE - 1, 0);
@@ -67,7 +67,7 @@ void lt(epoll_event* events, int number, int epollfd, int listenfd)
     }
 
 }
-
+//ET模式工作流程
 void et(epoll_event* events, int number, int epollfd, int listenfd)
 {
     char buf[BUFFER_SIZE];
@@ -153,6 +153,7 @@ int main(int argc, char* argv[])
             break;
         }
         lt(events, ret, epollfd, listenfd);
+        //et(events, ret, epollfd, listenfd);
     }
 
     close(listenfd);
