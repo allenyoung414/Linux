@@ -1,0 +1,4 @@
+/home/allen/kaifa/test/epollchat/testepoll/CMakeFiles/rebuild_cache.dir
+/home/allen/kaifa/test/epollchat/testepoll/CMakeFiles/edit_cache.dir
+/home/allen/kaifa/test/epollchat/testepoll/CMakeFiles/client.dir
+/home/allen/kaifa/test/epollchat/testepoll/CMakeFiles/server.dir
